@@ -47,3 +47,34 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.addUser = async (req, res, next) => {
+  firstname = req.body.firstname;
+  lastname = req.body.lastname,
+  username = req.body.username,
+  pwd = req.body.pwd,
+  avatar = req.body.avatar,
+  user = {}
+  user = await User.getByUsername(username);
+  
+  if ( firstname && lastname && username && pwd && avatar) 
+  {
+    if(Object.keys(user).length === 0)
+    {
+      result = await User.add(firstname, lastname, username, pwd, avatar);
+      user = User.getByUsername(username).id
+      res.status(201).json({
+        user
+      });
+    }else{
+      errorMessage = "User already exists."
+      res.status(409).json({
+        errorMessage 
+      });
+    }
+  }else{
+    errorMessage = "connect ECONNREFUSED 127.0.0.1:3306"
+    res.status(500).json({
+      errorMessage 
+    });
+  }
+};

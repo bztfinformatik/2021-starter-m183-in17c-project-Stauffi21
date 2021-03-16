@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const logger = require("./logger");
 
 const connectionPool = mysql.createPool({
   host: process.env.NODE_DBHOST,
@@ -9,7 +10,9 @@ const connectionPool = mysql.createPool({
 
 async function execute(sql, values, connection) {
     const formatedSql = connection.format(sql, values);
+    logger.debug(formatedSql);
     const result = await connection.execute(formatedSql);
+    logger.debug(result[0]);
     return result;
 }
 
